@@ -72,16 +72,25 @@ function makeNextGeneration(
   }
 }
 
+function lerp(x, min1, max1, min2, max2) {
+  return (x - min1) / (max1 - min1) * (max2 - min2) + min2;
+}
+
 function drawGeneration(generation, y) {
   generation.forEach(function(creature, index) {
+    const feather = 15;
+    var alpha = 255;
+    if (index < feather) alpha = lerp(index, 0, feather, 0, 255);
+    if (index > generation.length - feather)
+      alpha = lerp(generation.length - index, 0, feather, 0, 255);
     drawPixel(
         creature.x, y, creature.genome[0], creature.genome[1],
-        creature.genome[2], 255);
+        creature.genome[2], alpha);
   });
 }
 
 const maxWidth = 900, targetSize = 200;
-var generation = makeInitialGeneration(targetSize, maxWidth);
+var generation = makeInitialGeneration(1, maxWidth);
 drawGeneration(generation, 0);
 
 var i = 0;
